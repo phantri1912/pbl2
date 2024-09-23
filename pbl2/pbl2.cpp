@@ -19,6 +19,10 @@ char thongbaoexit[] = "thoat";
 char xoachu[] = "                                ";
 using namespace std;
 //6-9;
+void nh()
+{
+    ///
+}
 void inputText(int x, int y, char* buffer, int maxLength) //nhap chu trong khung dm kho vai cuc
 {
     int length = 0; // Độ dài chuỗi hiện tại
