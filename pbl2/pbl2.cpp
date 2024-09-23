@@ -21,7 +21,7 @@ using namespace std;
 //6-9;
 void nh()
 {
-    ///
+    //hơ to work
 }
 void inputText(int x, int y, char* buffer, int maxLength) //nhap chu trong khung dm kho vai cuc
 {
