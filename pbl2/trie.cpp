@@ -20,15 +20,122 @@ void TrieNode::printBooks() const {
         cout << book->getSubject() << endl;  // Giả sử toán tử << đã được định nghĩa cho Book
     }
 }
+TrieNode* TrieNode::returnnode(int i)
+{
+    return children[i];
+}
+void Trie::deleteTrie(TrieNode* node) {
+    if (!node) return;
 
-TrieNode::~TrieNode() {
-    // Không cần giải phóng books vì vector tự quản lý bộ nhớ
-    //for (auto book : books) {
-    //    delete book;  // Giả sử các Book đã được cấp phát bằng new
-    //}
-    books.clear();
+    for (int i = 0; i < 37; ++i) {
+        if (node->children[i] != nullptr) {
+            deleteTrie(node->children[i]);
+            node->children[i] = nullptr;
+        }
+    }
+    delete node;
+}
+void Trie::xoanode(const string& str, Book* book)
+{
+    TrieNode* n = search(str);
+    if (!n) {
+        cout << "Node not found!" << endl;
+        return;
+    }
+    int i = 0;
+    while (i < n->books.size() && n->books[i] != book) {
+        i++;
+    }
+
+    if (i == n->books.size()) {
+        cout << "Book not found!" << endl;
+        return;
+    }
+
+    int length = str.length();
+    bool* indexneedfree_isbn = new bool[length+2];
+    TrieNode** nodeneedfree_isbn = new TrieNode * [length+2];
+
+    n->books.erase(n->books.begin() + i);
+
+    if (n->books.size()==0)
+    {
+        TrieNode* rmnode = root;
+        int y = 0;
+
+        for (char digit : str)
+        {
+            indexneedfree_isbn[y] = true;
+            nodeneedfree_isbn[y] = rmnode;
+            int index;
+
+            // Tính chỉ mục index dựa trên kí tự digit
+            if (isalpha(digit)) {
+                index = tolower(digit) - 'a';
+            }
+            else if (isdigit(digit)) {
+                index = digit - '0' + 26;
+            }
+            else if (isspace(digit) || digit == '-') {
+                index = 36;
+            }
+
+            y++;
+
+            for (int z = 0; z < 37; z++) {
+                if (rmnode->children[z] != nullptr && z != index) {
+                    indexneedfree_isbn[y] = false; // Không thể xóa nếu có nhánh khác
+                    break;
+                }
+            }
+            rmnode = rmnode->children[index]; // Đi sâu vào node tiếp theo
+        }
+
+        // Xác định vị trí cuối cùng để xóa
+        int x;
+        n = root;
+        for (x = length - 1; x > 0; x--) {
+            if (indexneedfree_isbn[x] != true) {
+                break;
+            }
+        }
+
+        // Xóa các nút con
+        y = 0;
+        for (char digit : str)
+        {
+            int index;
+            if (isalpha(digit)) {
+                index = tolower(digit) - 'a';
+            }
+            else if (isdigit(digit)) {
+                index = digit - '0' + 26;
+            }
+            else if (isspace(digit) || digit == '-') {
+                index = 36;
+            }
+
+            if (y > x) {
+                deleteTrie(n->children[index]); 
+                n->children[index] = nullptr;
+                break;
+            }
+
+            n = n->children[index]; // Đi tới node con tiếp theo
+            y++;
+        }
+    }
+
+    // Giải phóng bộ nhớ động
+    delete[] indexneedfree_isbn;
+    delete[] nodeneedfree_isbn;
 }
 
+
+
+TrieNode::~TrieNode() {
+    books.clear();
+}
 // Trie
 Trie::Trie() : root(new TrieNode()) {}
 
@@ -103,17 +210,7 @@ Trie::~Trie() {
     deleteTrie(root);
 }
 
-void Trie::deleteTrie(TrieNode* node) {
-    if (!node) return;
 
-    for (int i = 0; i < 37; ++i) {
-        if (node->children[i] != nullptr) {
-            deleteTrie(node->children[i]);
-            node->children[i] = nullptr;
-        }
-    }
-    delete node;
-}
 
 void Trie::printAllBooksFromNode(TrieNode* node) {
     if (!node) return;

@@ -11,7 +11,7 @@ public:
     TrieNode* children[37];
     std::vector<Book*> books;  // Thay mảng tĩnh bằng vector
     
-
+    TrieNode* returnnode(int i);
     TrieNode();
     void addBook(Book* newBook);
     void printBooks() const;
@@ -32,7 +32,8 @@ public:
     void printAllBooks();
     TrieNode* getroot() { return root; }
     ~Trie();
-
+    void xoanode(const string& str, Book* book);
+    
 private:
     void deleteTrie(TrieNode* node);
     void printAllBooksFromNode(TrieNode* node);
