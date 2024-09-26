@@ -19,10 +19,7 @@ char thongbaoexit[] = "thoat";
 char xoachu[] = "                                ";
 using namespace std;
 //6-9;
-void nh()
-{
-    //hơ to work
-}
+
 void inputText(int x, int y, char* buffer, int maxLength) //nhap chu trong khung dm kho vai cuc
 {
     int length = 0; // Độ dài chuỗi hiện tại
@@ -178,6 +175,7 @@ bool nutmuonsach(Book* p, User* n, MuonTra* tt)//kiem tra co user hoac book ko,:
     if (tt->add(n->getId(), p->getIsbn()))
     {
         p->setbook(p->getCopies() - 1);
+        p->setsachbimuon(p->getsosachmuon() + 1);
         return true;
     }
 }
@@ -645,6 +643,7 @@ void luachontrasach(User* m, Trie* trieisbn, MuonTra* tt) {
                         if (node != nullptr && !node->books.empty()) {
                             Book* b = node->books[0];
                             b->setbook(b->getCopies() + 1); // Cập nhật số bản sách
+                            b->setsachbimuon(b->getsosachmuon() - 1);
                             std::cout << "Hoàn thành trả sách" <<b->getTitle()<< std::endl;
                             ::ymanhinh = 0;
                         }
@@ -659,6 +658,7 @@ void luachontrasach(User* m, Trie* trieisbn, MuonTra* tt) {
                 if (node != nullptr && !node->books.empty()) {
                     Book* b = node->books[0];
                     b->setbook(b->getCopies() + 1); // Cập nhật số bản sách
+                    b->setsachbimuon(b->getsosachmuon() -1);
                     std::cout << "Hoàn thành trả sách" << b->getTitle() << std::endl;
                     ::ymanhinh = 0;
                 }
@@ -674,6 +674,7 @@ void luachontrasach(User* m, Trie* trieisbn, MuonTra* tt) {
                         if (node != nullptr && !node->books.empty()) {
                             Book* b = node->books[0];
                             b->setbook(b->getCopies() + 1); // Cập nhật số bản sách
+                            b->setsachbimuon(b->getsosachmuon() - 1);
                             std::cout << "Hoàn thành trả sách" <<b->getTitle()<< std::endl;
                             ::ymanhinh = 0;
                         }
@@ -912,20 +913,70 @@ void themsach(Trie* trieisbn, Trie* trie, BookManager *mangbook) {
         }
     }
 }
-bool xoasach(Book* book,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie* caynxb, Trie* caynam, BookManager* mangbook)
+bool xoasach(Book* book, Trie* cayisbn, Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie* caynxb, Trie* caynam, BookManager* mangbook)
 {
-    TrieNode* n = caytieude->search(book->getTitle());
+    TrieNode* n = cayisbn->search(book->getIsbn());
     int i = 0;
     while (n->books[i] != book)
     {
         i++;
     }
-    int length = n->books[i]->getTitle().length();
+
+    int length = n->books[i]->getIsbn().length();
+    bool* indexneedfree_isbn = new bool[length];
+    TrieNode** nodeneedfree_isbn = new TrieNode * [length];
+    TrieNode* rmnode = cayisbn->getroot();
+    n->books.erase(n->books.begin() + i);
+    for (int y = 0; y < length; y++)
+    {
+        indexneedfree_isbn[y] = true;
+        nodeneedfree_isbn[y] = rmnode;
+        int index;
+        char digit = book->getIsbn()[y];
+        if (isalpha(digit)) {
+            index = tolower(digit) - 'a';
+        }
+        else if (isdigit(digit)) {
+            index = digit - '0' + 26;
+        }
+        else if (isspace(digit) || digit == '-') {
+            index = 36;
+        }
+        for (int z = 0; z < 37; z++)
+        {
+            if (rmnode->children[z] != nullptr && z != index)
+            {
+                indexneedfree_isbn[y] = false;
+                break;
+            }
+        }
+        rmnode = rmnode->children[index];
+
+    }
+    for (int y = length - 1; y >= 0; y--)
+    {
+        if (indexneedfree_isbn[y] == true)
+        {
+            delete nodeneedfree_isbn[y];
+            nodeneedfree_isbn[y] = nullptr;
+        }
+        else break;
+    }
+    delete[] nodeneedfree_isbn;
+    delete[] indexneedfree_isbn;
+
+     n = caytieude->search(book->getTitle());
+    i = 0;
+    while (n->books[i] != book)
+    {
+        i++;
+    }
+      
+    length = n->books[i]->getTitle().length();
     bool* indexneedfree_title = new bool[length];
-
     TrieNode** nodeneedfree_title = new TrieNode * [length];
-    TrieNode* rmnode = caytieude->getroot();
-
+    rmnode = caytieude->getroot();
+    n->books.erase(n->books.begin() + i);
     for (int y = 0; y < length; y++)
     {
         indexneedfree_title[y] = true;
@@ -943,19 +994,21 @@ bool xoasach(Book* book,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie
         }
         for (int z = 0; z < 37; z++)
         {
-            if (rmnode->children[z] != nullptr)
+            if (rmnode->children[z] != nullptr&&z!=index)
             {
                 indexneedfree_title[y] = false;
                 break;
             }
         }
         rmnode = rmnode->children[index];
+    
     }
     for (int y = length - 1; y >= 0; y--)
     {
         if (indexneedfree_title[y] == true)
         {
             delete nodeneedfree_title[y];
+            nodeneedfree_title[y] = nullptr;
         }
         else break;
     }
@@ -973,7 +1026,7 @@ bool xoasach(Book* book,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie
 
     TrieNode** nodeneedfree_subject = new TrieNode * [length];
     rmnode = caytheloai->getroot();
-
+    n->books.erase(n->books.begin() + i);
     for (int y = 0; y < length; y++)
     {
         indexneedfree_subject[y] = true;
@@ -1004,6 +1057,7 @@ bool xoasach(Book* book,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie
         if (indexneedfree_subject[y] == true)
         {
             delete nodeneedfree_subject[y];
+            nodeneedfree_subject[y] = nullptr;
         }
         else break;
     }
@@ -1021,7 +1075,7 @@ bool xoasach(Book* book,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie
 
     TrieNode** nodeneedfree_author = new TrieNode * [length];
     rmnode = caytacgia->getroot();
-
+    n->books.erase(n->books.begin() + i);
     for (int y = 0; y < length; y++)
     {
         indexneedfree_author[y] = true;
@@ -1047,6 +1101,7 @@ bool xoasach(Book* book,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie
         }
         rmnode = rmnode->children[index];
     }
+
     for (int y = length - 1; y >= 0; y--)
     {
         if (indexneedfree_author[y] == true)
@@ -1069,7 +1124,7 @@ bool xoasach(Book* book,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie
 
     TrieNode** nodeneedfree_publisher = new TrieNode * [length];
     rmnode = caynxb->getroot();
-
+    n->books.erase(n->books.begin() + i);
     for (int y = 0; y < length; y++)
     {
         indexneedfree_publisher[y] = true;
@@ -1118,6 +1173,7 @@ bool xoasach(Book* book,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie
 
     TrieNode** nodeneedfree_year = new TrieNode * [length];
     rmnode = caynam->getroot();
+    n->books.erase(n->books.begin() + i);
     for (int y = 0; y < length; y++)
     {
         indexneedfree_year[y] = true;
@@ -1153,183 +1209,186 @@ bool xoasach(Book* book,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie
     }
     delete[] nodeneedfree_year;
     delete[] indexneedfree_year;
+    mangbook->rmbook(book);
     return true;
 
 }
-//void inthongtinsachtrongnodevaxoasach(Node* p ,Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie* caynxb, Trie* caynam, BookManager* mangbook)
-//{
-//    for (int i = 0; i < p->books.size();)
-//    {
-//        cleardevice();
-//        inthongtinsach(p, i, 0);
-//        int x, y;
-//        outtextxy(825, 95, ::thongbaoexit);
-//        rectangle(800, 90, 1000, 120);
-//
-//        if (i < p->books.size() - 1)
-//        {
-//            char t5[] = "tiep";
-//            outtextxy(825, 125, t5);
-//            rectangle(800, 120, 1000, 150);
-//        }
-//        char t6[] = "xoa sach nay";
-//        outtextxy(825, 155, t6);
-//        rectangle(800, 150, 1000, 180);
-//        while (true)
-//        {
-//            if (ismouseclick(WM_LBUTTONDOWN))
-//            {
-//                getmouseclick(WM_LBUTTONDOWN, x, y);
-//                if (x > 800 && x < 1000 && y > 90 && y < 120) {
-//                    return;
-//                }
-//                if (x > 800 && x < 1000 && y > 120 && y < 150 && i < p->books.size() - 1) {
-//                    i++;
-//                    break;
-//                }
-//                if (x > 800 && x < 1000 && y > 150 && y < 180) {
-//
-//                    if (nutxoasach(p->books[i], n, tt))
-//                    {
-//                        char t7[] = "xoa sach thanh cong";
-//                        outtextxy(825, 185, t7);
-//                        rectangle(800, 180, 1000, 210);
-//                    }
-//                    else
-//                    {
-//                        char t7[] = "xoa sach that bai";
-//                        outtextxy(825, 185, t7);
-//                        rectangle(800, 180, 1000, 210);
-//                    }
-//                }
-//                clearmouseclick(WM_LBUTTONDOWN);
-//            }
-//        }
-//    }
-//}
-//void luachonxoasach(Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie* caynxb, Trie* caynam, BookManager* mangbook,Admin* n)
-//{
-//    int flag = 1;
-//    int x, y;
-//    char text0[] = "Nhap chuoi can tim";
-//    char text1[] = "Tim sach theo tieu de";
-//    char text2[] = "Tim sach theo the loai";
-//    char text3[] = "Tim sach theo tac gia";
-//    char text4[] = "Tim sach theo NXB";
-//    char text5[] = "Tim sach theo nam xuat ban";
-//    char t3[] = "Khong co sach";
-//    char text[100] = "";
-//
-//    // Giao diện ban đầu
-//    cleardevice();
-//    outtextxy(825, 95, ::thongbaoexit);
-//    rectangle(800, 90, 1000, 120);
-//    rectangle(90, 90, 400, 120);
-//    outtextxy(100, 100, text0);
-//    rectangle(90, 120, 400, 150);
-//    outtextxy(100, 130, text1);
-//    rectangle(90, 150, 400, 180);
-//    outtextxy(100, 160, text2);
-//    rectangle(90, 180, 400, 210);
-//    outtextxy(100, 190, text3);
-//    rectangle(90, 210, 400, 240);
-//    outtextxy(100, 220, text4);
-//    rectangle(90, 240, 400, 270);
-//    outtextxy(100, 250, text5);
-//
-//    while (true) {
-//        // Hiển thị thông báo nếu không tìm thấy sách
-//        if (flag == 0) {
-//            outtextxy(100, 130, t3); // Hiển thị "không có sách"
-//        }
-//
-//        if (ismouseclick(WM_LBUTTONDOWN)) {
-//            getmouseclick(WM_LBUTTONDOWN, x, y);
-//
-//            // Nhập chuỗi tìm kiếm
-//            if (x > 90 && x < 400 && y > 90 && y < 120) {
-//                inputText(250, 100, text, 100);
-//            }
-//
-//            // Tìm theo tiêu đề
-//            if (x > 90 && x < 400 && y > 120 && y < 150) {
-//                string str1(text);
-//                TrieNode* p = caytieude->search(str1);
-//                if (p != nullptr) {
-//                    inthongtinsachtrongnodevaxoasach(p, tt);
-//                    return;
-//                }
-//                else {
-//                    flag = 0;
-//                }
-//            }
-//
-//            // Tìm theo thể loại
-//            if (x > 90 && x < 400 && y > 150 && y < 180) {
-//                string str1(text);
-//                TrieNode* p = caytheloai->search(str1);
-//                if (p != nullptr) {
-//                    inthongtinsachtrongnodevamuonsach(p, n, tt);
-//                    return;
-//                }
-//                else {
-//                    flag = 0;
-//                }
-//            }
-//
-//            // Tìm theo tác giả
-//            if (x > 90 && x < 400 && y > 180 && y < 210) {
-//                string str1(text);
-//                TrieNode* p = caytacgia->search(str1);
-//                if (p != nullptr) {
-//                    inthongtinsachtrongnodevamuonsach(p, n, tt);
-//                    return;
-//                }
-//                else {
-//                    flag = 0;
-//                }
-//            }
-//
-//            // Tìm theo NXB
-//            if (x > 90 && x < 400 && y > 210 && y < 240) {
-//                string str1(text);
-//                TrieNode* p = caynxb->search(str1);
-//                if (p != nullptr) {
-//                    inthongtinsachtrongnodevamuonsach(p, n, tt);
-//                    return;
-//                }
-//                else {
-//                    flag = 0;
-//                }
-//            }
-//
-//            // Tìm theo năm xuất bản (sửa điều kiện cho đúng)
-//            if (x > 90 && x < 400 && y > 240 && y < 270) {
-//                string str1(text);
-//                TrieNode* p = caynam->search(str1);
-//                if (p != nullptr) {
-//                    inthongtinsachtrongnodevamuonsach(p, n, tt);
-//                    return;
-//                }
-//                else {
-//                    flag = 0;
-//                }
-//            }
-//
-//            // Thoát nếu nhấn vào vùng thông báo exit
-//            if (x > 800 && x < 1000 && y > 90 && y < 120) {
-//                return;
-//            }
-//
-//            // Xóa sự kiện chuột
-//            clearmouseclick(WM_LBUTTONDOWN);
-//        }
-//    }
-//}
+void inthongtinsachtrongnodevaxoasach(TrieNode * n,Trie* cayisbn, Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie* caynxb, Trie* caynam, BookManager* bookManager)
+{
+    for (int i = 0; i < n->books.size();)
+    {
+        cleardevice();
+        inthongtinsach(n, i, 0);
+        int x, y;
+        outtextxy(825, 95, ::thongbaoexit);
+        rectangle(800, 90, 1000, 120);
+
+        if (i < n->books.size() - 1)
+        {
+            char t5[] = "tiep";
+            outtextxy(825, 125, t5);
+            rectangle(800, 120, 1000, 150);
+        }
+        char t6[] = "xoa sach nay";
+        outtextxy(825, 155, t6);
+        rectangle(800, 150, 1000, 180);
+        while (true)
+        {
+            if (ismouseclick(WM_LBUTTONDOWN))
+            {
+                getmouseclick(WM_LBUTTONDOWN, x, y);
+                if (x > 800 && x < 1000 && y > 90 && y < 120) {
+                    return;
+                }
+                if (x > 800 && x < 1000 && y > 120 && y < 150 && i < n->books.size() - 1) {
+                    i++;
+                    break;
+                }
+                if (x > 800 && x < 1000 && y > 150 && y < 180) {
+
+                    if (xoasach(n->books[i],cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager))
+                    {
+                        char t7[] = "xoa sach thanh cong";
+                        cout << "xoa sach thanh cong";
+                        outtextxy(825, 185, t7);
+                        rectangle(800, 180, 1000, 210);   
+                        return;
+                    }
+                    else
+                    {
+                        char t7[] = "xoa sach that bai";
+                        cout << "xoa sach that bai";
+                        outtextxy(825, 185, t7);
+                        rectangle(800, 180, 1000, 210);
+                    }
+                }
+                clearmouseclick(WM_LBUTTONDOWN);
+            }
+        }
+    }
+}
+void timsachdexoa(Trie* cayisbn, Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie* caynxb, Trie* caynam, BookManager* bookManager)
+{
+    int flag = 1;
+    int x, y;
+    char text0[] = "Nhap chuoi can tim";
+    char text1[] = "xoa sach theo tieu de";
+    char text2[] = "xoa sach theo the loai";
+    char text3[] = "xoa sach theo tac gia";
+    char text4[] = "xoa sach theo NXB";
+    char text5[] = "xoa sach theo nam xuat ban";
+    char t3[] = "Khong co sach";
+    char text[100] = "";
+
+    // Giao diện ban đầu
+    cleardevice();
+    outtextxy(825, 95, ::thongbaoexit);
+    rectangle(800, 90, 1000, 120);
+    rectangle(90, 90, 400, 120);
+    outtextxy(100, 100, text0);
+    rectangle(90, 120, 400, 150);
+    outtextxy(100, 130, text1);
+    rectangle(90, 150, 400, 180);
+    outtextxy(100, 160, text2);
+    rectangle(90, 180, 400, 210);
+    outtextxy(100, 190, text3);
+    rectangle(90, 210, 400, 240);
+    outtextxy(100, 220, text4);
+    rectangle(90, 240, 400, 270);
+    outtextxy(100, 250, text5);
+
+    while (true) {
+        // Hiển thị thông báo nếu không tìm thấy sách
+        if (flag == 0) {
+            outtextxy(100, 130, t3); // Hiển thị "không có sách"
+        }
+
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+
+            // Nhập chuỗi tìm kiếm
+            if (x > 90 && x < 400 && y > 90 && y < 120) {
+                inputText(250, 100, text, 100);
+            }
+
+            // Tìm theo tiêu đề
+            if (x > 90 && x < 400 && y > 120 && y < 150) {
+                string str1(text);
+                TrieNode* p = caytieude->search(str1);
+                if (p != nullptr) {
+                    inthongtinsachtrongnodevaxoasach(p, cayisbn, caytheloai, caytacgia, caytieude,  caynxb, caynam, bookManager);
+                    return;
+                }
+                else {
+                    flag = 0;
+                }
+            }
+
+            // Tìm theo thể loại
+            if (x > 90 && x < 400 && y > 150 && y < 180) {
+                string str1(text);
+                TrieNode* p = caytheloai->search(str1);
+                if (p != nullptr) {
+                    inthongtinsachtrongnodevaxoasach(p, cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
+                    return;
+                }
+                else {
+                    flag = 0;
+                }
+            }
+
+            // Tìm theo tác giả
+            if (x > 90 && x < 400 && y > 180 && y < 210) {
+                string str1(text);
+                TrieNode* p = caytacgia->search(str1);
+                if (p != nullptr) {
+                    inthongtinsachtrongnodevaxoasach(p, cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
+                    return;
+                }
+                else {
+                    flag = 0;
+                }
+            }
+
+            // Tìm theo NXB
+            if (x > 90 && x < 400 && y > 210 && y < 240) {
+                string str1(text);
+                TrieNode* p = caynxb->search(str1);
+                if (p != nullptr) {
+                    inthongtinsachtrongnodevaxoasach(p, cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
+                    return;
+                }
+                else {
+                    flag = 0;
+                }
+            }
+
+            // Tìm theo năm xuất bản (sửa điều kiện cho đúng)
+            if (x > 90 && x < 400 && y > 240 && y < 270) {
+                string str1(text);
+                TrieNode* p = caynam->search(str1);
+                if (p != nullptr) {
+                    inthongtinsachtrongnodevaxoasach(p, cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
+                    return;
+                }
+                else {
+                    flag = 0;
+                }
+            }
+
+            // Thoát nếu nhấn vào vùng thông báo exit
+            if (x > 800 && x < 1000 && y > 90 && y < 120) {
+                return;
+            }
+
+            // Xóa sự kiện chuột
+            clearmouseclick(WM_LBUTTONDOWN);
+        }
+    }
+}
 
 void luachondangnhap(User* m, MuonTra* tt, Trie* cayisbn, Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie* caynxb, Trie* caynam, BookManager* bookManager) //chay neu dang nhap thanh cong
 {
-    
     int x, y;
     
     while (true) {
@@ -1342,6 +1401,7 @@ void luachondangnhap(User* m, MuonTra* tt, Trie* cayisbn, Trie* caytheloai, Trie
     char tex5[] = "chao ban";
     char tex6[] = "hien thi thong tin";
     char tex7[] = "them sach";
+    char tex8[] = "xoasach";
 
     setcolor(GREEN); 
     char* cstr = new char[m->getId().length() + 1];
@@ -1367,12 +1427,12 @@ void luachondangnhap(User* m, MuonTra* tt, Trie* cayisbn, Trie* caytheloai, Trie
         if (ismouseclick(WM_LBUTTONDOWN)) {
             getmouseclick(WM_LBUTTONDOWN, x, y);
 
-            if (x > 90 && x < 400 && y > 90 && y < 120) {
+            /*if (x > 90 && x < 400 && y > 90 && y < 120) {
                 luachonmuonsach(m, cayisbn, tt);
                 cleardevice();
            
                 outtextxy(100, 70, tex2);
-            }
+            }*/
 
             if (x > 90 && x < 400 && y > 120 && y < 150) {
                 luachontimsachvamuon( caytheloai,caytacgia, caytieude, caynxb, caynam, m,tt);
@@ -1397,6 +1457,11 @@ void luachondangnhap(User* m, MuonTra* tt, Trie* cayisbn, Trie* caytheloai, Trie
             if (x > 90 && x < 400 && y>270 && y < 300)
             {
                 themsach(cayisbn, caytheloai, bookManager);
+                cleardevice();
+            }
+            if (x > 90 && x < 400 && y>300 && y < 330)
+            {
+                timsachdexoa(cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
                 cleardevice();
             }
 

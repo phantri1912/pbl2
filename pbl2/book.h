@@ -17,11 +17,14 @@ private:
     Date date;
     int pages;
     int copies;
+    int sachbimuon;
 public:
     Book(string isbn, string title, string subject, string author,
         string publisher, Date date, int pages, int copies);
     string getIsbn() const;
     void setbook(int value);
+    void setsachbimuon(int value) { sachbimuon = value; }
+    int getsosachmuon() const;
     string getTitle() const;
     string getSubject() const;
     string getAuthor() const;
@@ -34,24 +37,57 @@ public:
 class BookManager {
 private:
     vector<Book*> books;   // Sử dụng vector thay vì mảng con trỏ
-    int bookCount;         // Số lượng sách hiện tại
-    // Không cần bookCapacity nữa
+    int bookCount;    // Số lượng sách hiện tại
 
 public:
     BookManager() : bookCount(0) {} // Khởi tạo vector rỗng
 
     // Thêm sách vào vector
+    vector<Book*> getbooks() { return books; }
     void addBook(Book* book) {
-        books.push_back(book);   // Thêm sách vào vector
+        books.push_back(book);
         bookCount++;
     }
+    int findbook(Book* book)
+    {
+        for (int i = 0; i < books.size(); i++)
+        {
+            if (books[i] == book)
+            {
+                return i; 
+            }
+        }
+        return -1; 
+    }
 
-    // Xóa tất cả các sách
+    void rmbook(Book* book)
+    {
+        int index = findbook(book);  
+        if (index == -1)
+        {
+            cout << "Book not found!" << endl;
+            return;
+        }
+
+        Book* rmbook = books[index]; 
+
+        if (rmbook->getsosachmuon() > 0)
+        {
+            cout << "Sách đang có người mượn, không thể xóa!" << endl;
+            return;
+        }
+        cout << books.size();
+        books.erase(books.begin() + index);
+        cout << books.size();
+        bookCount--;
+        delete rmbook;
+    }
+    
     void deleteAllBooks() {
         for (Book* book : books) {
             delete book;  // Xóa từng sách
         }
-        books.clear();  // Xóa tất cả các phần tử trong vector
+        books.clear();
         bookCount = 0;
     }
 

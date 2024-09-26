@@ -126,7 +126,6 @@ bool MuonTra::add(const string& iduser, const string& idbook) {
 
     int index = kiemtraid(iduser);
     if (index != -1) {
-        // Người dùng đã tồn tại, thêm thông tin sách mượn
         if (!dsid[index]->addbook(idbook, today, dueDate)) {
             return false;
         }

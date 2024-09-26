@@ -10,7 +10,7 @@ class TrieNode {
 public:
     TrieNode* children[37];
     std::vector<Book*> books;  // Thay mảng tĩnh bằng vector
-    // Không cần bookCount và bookCapacity nữa
+    
 
     TrieNode();
     void addBook(Book* newBook);
@@ -18,7 +18,6 @@ public:
     ~TrieNode();
 
 private:
-    // Không cần resizeBooks nữa
 };
 
 class Trie {
