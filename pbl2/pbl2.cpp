@@ -1369,7 +1369,7 @@ int main() {
 
          manhinhchinh(m, tt, cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
          (*m).printallUsers();
-         ghifile(m, cayisbn, tt, caytheloai, bookManager);
+         ghifile(m, cayisbn, tt);
          delete tt;
          delete cayisbn;
          delete caytheloai;

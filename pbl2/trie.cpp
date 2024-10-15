@@ -12,12 +12,12 @@ TrieNode::TrieNode() {
 }
 
 void TrieNode::addBook(Book* newBook) {
-    books.push_back(newBook);  // Thêm sách vào vector
+    books.push_back(newBook);  
 }
 
 void TrieNode::printBooks() const {
     for (const auto& book : books) {
-        cout << book->getSubject() << endl;  // Giả sử toán tử << đã được định nghĩa cho Book
+        cout << book->getSubject() << endl;
     }
 }
 TrieNode* TrieNode::returnnode(int i)
@@ -38,23 +38,23 @@ void Trie::deleteTrie(TrieNode* node) {
 void Trie::xoanode(const string& str, Book* book)
 {
     TrieNode* n = search(str);
-    if (!n) {
+    if (!n|| n->books.size()==0) {
         cout << "Node not found!" << endl;
         return;
     }
     int i = 0;
-    while (i < n->books.size() && n->books[i] != book) {
+    while (i <= n->books.size() && n->books[i] != book) {
         i++;
     }
 
-    if (i == n->books.size()) {
+    if (i > n->books.size()) {
         cout << "Book not found!" << endl;
         return;
     }
 
     int length = str.length();
-    bool* indexneedfree_isbn = new bool[length+2];
-    TrieNode** nodeneedfree_isbn = new TrieNode * [length+2];
+    bool* indexneedfree_isbn = new bool[length+1];
+    TrieNode** nodeneedfree_isbn = new TrieNode * [length+1];
 
     n->books.erase(n->books.begin() + i);
 
@@ -67,7 +67,7 @@ void Trie::xoanode(const string& str, Book* book)
         {
             indexneedfree_isbn[y] = true;
             nodeneedfree_isbn[y] = rmnode;
-            int index;
+            int index=37;
 
             // Tính chỉ mục index dựa trên kí tự digit
             if (isalpha(digit)) {
@@ -76,11 +76,9 @@ void Trie::xoanode(const string& str, Book* book)
             else if (isdigit(digit)) {
                 index = digit - '0' + 26;
             }
-            else if (isspace(digit) || digit == '-') {
+            else if (isspace(digit)) {
                 index = 36;
             }
-
-            y++;
 
             for (int z = 0; z < 37; z++) {
                 if (rmnode->children[z] != nullptr && z != index) {
@@ -88,19 +86,27 @@ void Trie::xoanode(const string& str, Book* book)
                     break;
                 }
             }
+            y++;
             rmnode = rmnode->children[index]; // Đi sâu vào node tiếp theo
         }
-
-        // Xác định vị trí cuối cùng để xóa
-        int x;
-        n = root;
-        for (x = length - 1; x > 0; x--) {
-            if (indexneedfree_isbn[x] != true) {
+        indexneedfree_isbn[y] = true;
+        nodeneedfree_isbn[y] = rmnode;
+        for (int z = 0; z < 37; z++) {
+            if (rmnode->children[z] != nullptr) {
+                indexneedfree_isbn[y] = false; // Không thể xóa nếu có nhánh khác
                 break;
             }
         }
-
-        // Xóa các nút con
+        int x;
+        
+        for (x = length + 1; x > 0;x-- ) {
+            if (indexneedfree_isbn[x] != true) {
+                x++;
+                break;
+            }
+            
+        }
+        n = root;
         y = 0;
         for (char digit : str)
         {
@@ -111,11 +117,10 @@ void Trie::xoanode(const string& str, Book* book)
             else if (isdigit(digit)) {
                 index = digit - '0' + 26;
             }
-            else if (isspace(digit) || digit == '-') {
+            else if (isspace(digit)) {
                 index = 36;
             }
-
-            if (y > x) {
+            if (y == x-1) {
                 deleteTrie(n->children[index]); 
                 n->children[index] = nullptr;
                 break;
@@ -149,7 +154,7 @@ void Trie::insert(const string& str, Book* book) {
         else if (isdigit(digit)) {
             index = digit - '0' + 26;
         }
-        else if (isspace(digit) || digit == '-') {
+        else if (isspace(digit)) {
             index = 36;
         }
         else {
@@ -177,7 +182,7 @@ TrieNode* Trie::search(const string& str) {
         else if (isdigit(digit)) {
             index = digit - '0' + 26;
         }
-        else if (isspace(digit) || digit == '-') {
+        else if (isspace(digit)) {
             index = 36;
         }
         else {

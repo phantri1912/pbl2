@@ -1,14 +1,4 @@
-﻿#include "book.h"
-#include "user.h"
-#include "trie.h"
-#include "thoigian.h"
-#include "muontra.h"
-#include <iostream>
-#include <fstream>
-#include "graphics.h"
-#include "file.h"
-#include <fstream>
-#include <iostream>
+﻿#include "file.h"
 #include <string>
 using namespace std;
 
@@ -46,7 +36,7 @@ void ghi(TrieNode* node, ofstream& output) {
     }
 }
 
-void ghifile(Manguser* m, Trie* trie, MuonTra* tt, Trie* trieisbn, BookManager* mangbook) {
+void ghifile(Manguser* m, Trie* trie, MuonTra* tt) {
     ofstream output("C:\\Users\\LENOVO\\OneDrive - The University of Technology\\Desktop\\pbl2\\pbl2\\test.txt", ios::out);
     if (!output.is_open()) {
         cerr << "Không thể mở tệp để ghi.\n";
@@ -54,8 +44,7 @@ void ghifile(Manguser* m, Trie* trie, MuonTra* tt, Trie* trieisbn, BookManager* 
     }
 
     // Gọi hàm ghi để ghi dữ liệu từ trie vào file
-    ghi(trieisbn->getroot(), output);
-
+    ghi(trie->getroot(), output);
     output.close();
 }
 
