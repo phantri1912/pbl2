@@ -161,6 +161,7 @@ void Trie::insert(const string& str, Book* book) {
             index = 37; // Bỏ qua các ký tự không hợp lệ
         }
         if (index < 0 || index > 36) {
+
             cout << "false";
             return;
         }
@@ -226,4 +227,24 @@ void Trie::printAllBooksFromNode(TrieNode* node) {
         }
     }
     node->printBooks();
+}
+bool check(string str)
+{
+    for (char digit : str) {
+        int index;
+        if (isalpha(digit) || isdigit(digit) || isspace(digit))
+        {
+
+        }
+        else {
+            return false;
+        }
+    }
+    return true;
+}
+bool check(string isbn, string title, string subject, string author, string publisher)
+{
+    if (check(isbn) && check(title) && check(subject) && check(author) && check(publisher))
+        return true;
+    else return false;
 }

@@ -59,5 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="test.txt" />
+    <Text Include="user.txt" />
+    <Text Include="muontra.txt" />
   </ItemGroup>
 </Project>

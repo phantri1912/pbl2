@@ -1,12 +1,12 @@
 ﻿
 #include "user.h"
-#include "book.h"
-#include "thoigian.h"
 #include "trie.h"
+#include "muontra.h"
 #include "file.h"
 #include <iostream>
 #include <crtdbg.h> // Thư viện hỗ trợ kiểm tra rò rỉ bộ nhớ
 #include "graphics.h"
+
 #pragma comment(lib,"graphics.lib")
 #define _CRTDBG_MAP_ALLOC
 #ifdef _DEBUG
@@ -66,7 +66,7 @@ void inputText(int x, int y, char* buffer, int maxLength) //nhap chu trong khung
 }
 bool dangnhap(string id, string matkhau, Manguser* m)//check tai khoan
 {
-    if (m->binarySearch(id) == -1 || m->getuser(m->binarySearch(id))->getMatkhau() != matkhau)return false;
+    if (m->binarySearchuser(id) == -1 || m->getuser(m->binarySearchuser(id))->getMatkhau() != matkhau)return false;
     else return true;
 }
 void luachonmuonsach(User* m, Trie* trie, MuonTra* tt)//hien ra lua  chon muon sach theo yeu cau
@@ -744,7 +744,7 @@ void themsach(Trie* trieisbn, Trie* trie, BookManager *mangbook) {
                     setcolor(GREEN);
                     inputText(250, 100, text1, 100); // Nhập mã số
                     check = string(text1);
-                    if (!kiemtraisbn(check)) {
+                    if (!kiemtraisbn(check, trieisbn)) {
                         strcpy_s(tex, sizeof(tex), "Loi ma so");
                         outtextxy(410, 100, tex);
                         flag[0] = 0;
@@ -1232,7 +1232,7 @@ void luachon1(Manguser* m, MuonTra* tt, Trie* cayisbn, Trie* caytheloai, Trie* c
     {
          flag = 0;
          cleardevice();
-         luachondangnhap(m->getuser(m->binarySearch(str1)), tt, cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
+         luachondangnhap(m->getuser(m->binarySearchuser(str1)), tt, cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
          return;
     }
     else
@@ -1334,21 +1334,7 @@ int main() {
     // Kích hoạt kiểm tra rò rỉ bộ nhớ
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     {
-        
-        User* user = new User("1", "password");
         Manguser* m = new Manguser();
-        m->adduser(user);
-
-        // Tạo đối tượng Admin
-        Admin* admin2 = new Admin("2", "password");
-        Manguser* m2 = new Manguser();
-        m2->adduser(admin2);
-
-        // Truy cập đối tượng Admin
-        User* u = m2->getuser(0);
-      
-           
-        
         BookManager* bookManager = new BookManager;
        
         Date t(2, 2, 2);
@@ -1362,14 +1348,14 @@ int main() {
 
 
          MuonTra* tt = new MuonTra();
-         if (docfile(cayisbn,caytheloai ,caytacgia ,caytieude, caynxb, caynam, bookManager))
+         if (docfilebook(cayisbn,caytheloai ,caytacgia ,caytieude, caynxb, caynam, bookManager)&&docfileuser(m)&&docfilemuontra(tt, cayisbn,m))
          {
              cout << "Doc file hoan thanh";
          }
 
          manhinhchinh(m, tt, cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
-         (*m).printallUsers();
-         ghifile(m, cayisbn, tt);
+         
+         ghifilebook( cayisbn);
          delete tt;
          delete cayisbn;
          delete caytheloai;

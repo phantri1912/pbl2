@@ -56,7 +56,8 @@ public:
     void printallUsers();
     void sortUsers();
 
-    int binarySearch(const string& id);
+    int binarySearchuser(const string& id);
+    int binarySearchadmin(const string& id);
     ~Manguser() {
         for (User* u : manguser) {
             delete u;
@@ -66,5 +67,8 @@ public:
         }
     }
 };
+extern bool checkacount(string id, string mk);
+
+
 
 #endif // USER_H

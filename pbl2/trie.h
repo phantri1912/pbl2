@@ -38,5 +38,7 @@ private:
     void deleteTrie(TrieNode* node);
     void printAllBooksFromNode(TrieNode* node);
 };
+bool check(string str);
+bool check(string isbn, string title, string subject, string author, string publisher);
 
 #endif // TRIE_H

@@ -84,11 +84,10 @@ void Manguser::sortUsers() {
 
 
 void Manguser::sortadd() {
-    int i = manguser.size() - 2;
+    int i = manguser.size() ;
     while (i >= 0 && manguser.back()->getId() < manguser[i]->getId()) {
         i--;
     }
-
     User* temp = manguser.back();
     for (int j = manguser.size() - 1; j > i + 1; j--) {
         manguser[j] = manguser[j - 1];
@@ -97,7 +96,7 @@ void Manguser::sortadd() {
     manguser[i + 1] = temp;
 }
 
-int Manguser::binarySearch(const string& id) {
+int Manguser::binarySearchuser(const string& id) {
     int left = 0, right = manguser.size() - 1;
     while (left <= right) {
         int mid = left + (right - left) / 2;
@@ -113,4 +112,44 @@ int Manguser::binarySearch(const string& id) {
     }
     return -1; // Không tìm thấy
 }
+int Manguser::binarySearchadmin(const string& id) {
+    int left = 0, right = mangadmin.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (mangadmin[mid]->getId() == id) {
+            return mid; // Tìm thấy User
+        }
+        if (mangadmin[mid]->getId() < id) {
+            left = mid + 1; // Tìm kiếm nửa phải
+        }
+        else {
+            right = mid - 1; // Tìm kiếm nửa trái
+        }
+    }
+    return -1; // Không tìm thấy
+}
+bool checkacount(string id, string mk,bool flag)
+{
+    for (char digit : id) {
+        int index;
+        if (isalpha(digit) || isdigit(digit))
+        {
 
+        }
+        else {
+            return false;
+        }
+    }
+    for (char digit : mk) {
+        int index;
+        if (isalpha(digit) || isdigit(digit))
+        {
+
+        }
+        else {
+            return false;
+        }
+    }
+
+    return true;
+}

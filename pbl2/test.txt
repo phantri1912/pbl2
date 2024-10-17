@@ -1,30 +1,9 @@
-1098765430/Prolog/Xu ly ngon ngu/Phat trien tri tue nhan tao/NXB AI Pro/20/1/2021/300/2
-1098765432/Dart/Phat trien Flutter/Lap trinh di dong/NXB Flutter Co/11/11/2021/250/4
-1098765439/Lua/Xu ly logic game/Phat trien game/NXB Game Dev/14/12/2020/295/4
-2109876541/Nim/Phat trien he thong/Lap trinh phan mem/NXB An Toan/14/11/2022/285/5
-2109876543/Scala/Xu ly du lieu lon/Phat trien he thong/NXB BigData/12/4/2022/310/2
-2109876548/Tcl/Phat trien ung dung/Lap trinh script/NXB Script Masters/7/8/2022/275/2
-2345678901/Java/Lap trinh ung dung/Phat trien ung dung/NXB Lap Trinh/8/12/2022/300/5
-3210987650/Julia/Phat trien phan mem du lieu/Khoa hoc du lieu/NXB Tri Tue/1/12/2020/320/4
-3210987654/Kotlin/Phat trien Android/Lap trinh di dong/NXB Kotlin Dev/5/10/2021/290/3
-3210987657/Rust/Phat trien he thong/Lap trinh he thong/NXB An Toan/6/6/2021/290/3
-4321098765/PHP/Xu ly backend/Phat trien ung dung web/NXB PHP Viet/3/8/2022/270/5
-4321098766/Assembly/Lap trinh he thong/Lap trinh cap thap/NXB He Thong/13/5/2020/280/5
-4321098769/Fsharp/Phat trien phan mem/Phat trien ung dung/NXB Microsoft/22/9/2021/310/5
-5432109875/Fortran/Phat trien phan mem toan hoc/Lap trinh khoa hoc/NXB Toan Hoc/3/2/2021/310/2
-5432109876/Go/Xu ly da luong/Lap trinh he thong/NXB He Thong/6/6/2023/300/4
-5432109878/Haskell/Phat trien ung dung/Lap trinh chuc nang/NXB Haskell Pro/10/2/2022/315/6
-6543210984/Shell/Quan tri he thong/Lap trinh script/NXB Linux/4/7/2021/260/6
-6543210985/OCaml/Lap trinh chuc nang/Phat trien he thong/NXB Caml Viet/15/7/2023/285/3
-6543210987/Ruby/Phat trien backend/Phat trien web/NXB Ruby Experts/2/2/2020/280/6
-7654321093/VB.Net/Lap trinh ung dung desktop/Phat trien ung dung/NXB VB Expert/9/9/2022/330/4
-7654321094/Erlang/Xu ly song song/Lap trinh he thong/NXB Erlang Dev/11/4/2021/320/4
-7654321098/JavaScript/Phat trien frontend/Lap trinh web/NXB Web Developers/9/9/2021/295/5
-8765432102/Csharp/Phat trien ung dung desktop/Phat trien phan mem/NXB Microsoft/25/12/2020/320/5
-8765432103/Racket/Giang day lap trinh/Lap trinh giao duc/NXB Hoc Vien/9/6/2020/270/5
-8765432104/Solidity/Phat trien hop dong thong minh/Lap trinh blockchain/NXB Blockchain/7/6/2021/310/3
-8765432109/Swift/Phat trien iOS/Lap trinh di dong/NXB Apple/7/7/2020/250/3
-9876543210/Python/Phan tich du lieu/Khoa hoc du lieu/NXB Tri Tue/15/5/2021/280/4
-9876543211/Perl/Phat trien script/Lap trinh script/NXB Perl Pro/18/3/2023/270/6
-9876543212/ObjectPascal/Phat trien phan mem/Lap trinh phan mem/NXB Pascal Viet/8/8/2021/310/6
-9876543213/Elixir/Xu ly du lieu/Lap trinh he thong/NXB BigData/18/3/2023/295/4
+0987654323/Lap trinh huong doi tuong/Giao trinh/Le Thi My Hanh/Dai hoc Quoc gia/22/9/2021/400/300
+0987654321/Phan tich thiet ke giai thuat/Giao trinh/Nguyen Thanh Binh/Dai hoc Can Tho/12/3/2019/420/200
+1234567890/Co so lap trinh/Giao trinh/Nguyen Van A/Dai hoc Bach Khoa/15/6/2020/350/500
+2233445566/Nguyen ly he dieu hanh/Giao trinh/Tran Ho Thuy Tien/Dai hoc Hue/5/11/2018/370/147
+4455667788/Giai tich 1/Giao trinh/Chu Van Tiep/Dai hoc Bach Khoa/10/1/2019/300/250
+5566778899/Cau truc du lieu va giai thuat/Giao trinh/Nguyen Van B/Dai hoc Khoa hoc tu nhien/18/4/2020/450/400
+6677889900/Lap trinh web co ban/Giao trinh/Tran Quoc Tuan/Dai hoc FPT/27/8/2021/320/350
+7788990011/Cong nghe phan mem/Giao trinh/Le Thi Lan/Dai hoc Mo TP HCM/15/5/2017/380/180
+8899001122/He thong nhung/Giao trinh/Nguyen Quoc Khanh/Dai hoc Bach Khoa/2/3/2020/410/220

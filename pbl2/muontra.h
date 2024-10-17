@@ -11,20 +11,20 @@ using namespace std;
 class nguoimuon {
 private:
     string isbn[3]; // Tối đa 3 sách
-    Date ngaymuon[3];
-    Date ngaytra[3];
+    Date* ngaymuon[3];
+    Date* ngaytra[3];
     string id;
     int countbook; // Số lượng sách hiện đang mượn
 
 public:
-    nguoimuon(const string& isbn, const Date& ngaymuon, const Date& ngaytra, const string& id);
+    nguoimuon(const string& isbn,  Date* ngaymuon,  Date* ngaytra, const string& id);
     string getisbn(int index) const;
-    Date getngaymuon(int index) const;
-    Date getngaytra(int index) const;
+    Date getngaymuon(int index) ;
+    Date getngaytra(int index) ;
     string getid() const;
     int getcountbook() const;
     bool trasach(int i);
-    bool addbook(const string& newisbn, const Date& newngaymuon, const Date& newngaytra);
+    bool addbook(const string& newisbn, Date* newngaymuon, Date* newngaytra);
     void hienthi() const;
 };
 
@@ -41,6 +41,7 @@ public:
     int kiemtraid(const string& id);
     void addarray(nguoimuon* user);
     bool add(const string& iduser, const string& idbook);
+    bool add2(const string& iduser, const string& idbook, Date* ngaymuon, Date* ngaytra);
     void sortUsers();
     void sortadd();
     nguoimuon* getnguoimuon(int t) { return dsid[t]; };

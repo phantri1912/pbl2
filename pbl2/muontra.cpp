@@ -3,7 +3,7 @@
 using namespace std;
 
 // Triển khai các phương thức của lớp nguoimuon
-nguoimuon::nguoimuon(const string& isbn1, const Date& ngaymuon1, const Date& ngaytra1, const string& id)
+nguoimuon::nguoimuon(const string& isbn1,  Date* ngaymuon1,  Date* ngaytra1, const string& id)
     : id(id), countbook(1)  // Khởi tạo countbook với 1 khi tạo mới
 {
     isbn[0] = isbn1;
@@ -44,25 +44,25 @@ bool nguoimuon::trasach(int i) {
 
     return true;
 }
-Date nguoimuon::getngaymuon(int index) const {
+Date nguoimuon::getngaymuon(int index)  {
     if (index >= 0 && index < 3) {
-        return ngaymuon[index];
+        return *(ngaymuon[index]);
     }
-    return Date(); // Trả về đối tượng Date mặc định nếu index không hợp lệ
+    return Date(false); 
 }
 
-Date nguoimuon::getngaytra(int index) const {
+Date nguoimuon::getngaytra(int index)  {
     if (index >= 0 && index < 3) {
-        return ngaytra[index];
+        return *(ngaytra[index]);
     }
-    return Date(); // Trả về đối tượng Date mặc định nếu index không hợp lệ
+    return Date(true); 
 }
 
 string nguoimuon::getid() const { return id; }
 
 int nguoimuon::getcountbook() const { return countbook; }
 
-bool nguoimuon::addbook(const string& newisbn, const Date& newngaymuon, const Date& newngaytra) {
+bool nguoimuon::addbook(const string& newisbn,  Date* newngaymuon,  Date* newngaytra) {
     if (countbook < 3) {
         isbn[countbook] = newisbn;
         ngaymuon[countbook] = newngaymuon;
@@ -121,23 +121,34 @@ void MuonTra::addarray(nguoimuon* user) {
 }
 
 bool MuonTra::add(const string& iduser, const string& idbook) {
-    Date today;  // Giả sử bạn có thể lấy ngày hiện tại
-    Date dueDate; // Giả sử bạn có thể tính toán ngày trả
-
+    Date* today = new Date(false);  
+    Date* dueDate = new Date(true);
     int index = kiemtraid(iduser);
     if (index != -1) {
         if (!dsid[index]->addbook(idbook, today, dueDate)) {
             return false;
         }
     }
+    
     else {
-        // Người dùng chưa tồn tại, tạo mới
         nguoimuon* newUser = new nguoimuon(idbook, today, dueDate, iduser);
         addarray(newUser);
     }
     return true;
 }
-
+bool MuonTra::add2(const string& iduser, const string& idbook, Date* ngaymuon, Date* ngaytra) {
+    int index = kiemtraid(iduser);
+    if (index != -1) {
+        if (!dsid[index]->addbook(idbook, ngaymuon, ngaytra)) {
+            return false;
+        }
+    }
+    else {
+        nguoimuon* newUser = new nguoimuon(idbook, ngaymuon, ngaytra, iduser);
+        addarray(newUser);
+    }
+    return true;
+}
 void MuonTra::sortUsers() {
     for (int i = 0; i < soLuonguser - 1; i++) {
         for (int j = i + 1; j < soLuonguser; j++) {
