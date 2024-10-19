@@ -45,6 +45,7 @@ public:
     void sortUsers();
     void sortadd();
     nguoimuon* getnguoimuon(int t) { return dsid[t]; };
+    friend void ghifilemuontra(MuonTra* tt);
     ~MuonTra();
 };
 

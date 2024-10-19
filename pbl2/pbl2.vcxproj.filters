@@ -58,8 +58,15 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="test.txt" />
-    <Text Include="user.txt" />
+    <Text Include="book1.txt" />
+    <Text Include="user1.txt" />
     <Text Include="muontra.txt" />
+    <Text Include="userout.txt" />
+    <Text Include="bookout.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="muontraout.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

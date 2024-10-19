@@ -1,4 +1,5 @@
 ﻿#include "file.h"
+#include <iostream>
 using namespace std;
 
 void ghi(TrieNode* node, ofstream& output) {
@@ -61,7 +62,7 @@ bool kiemtraisbn(const string& isbn,Trie* trieisbn) {
     return true;
 }
 bool docfilebook(Trie* cayisbn, Trie* caytheloai, Trie* caytacgia, Trie* caytieude, Trie* caynxb, Trie* caynam, BookManager* mangbook) {
-    ifstream input("C:\\Users\\LENOVO\\OneDrive - The University of Technology\\Desktop\\pbl2\\pbl2\\test.txt");
+    ifstream input("C:\\Users\\LENOVO\\OneDrive - The University of Technology\\Desktop\\pbl2\\pbl2\\book1.txt");
     if (!input.is_open()) {
         cerr << "Không thể mở tệp để đọc.\n";
         return false;
@@ -241,7 +242,7 @@ bool docfilebook(Trie* cayisbn, Trie* caytheloai, Trie* caytacgia, Trie* caytieu
 }
 bool docfileuser(Manguser* m)
 {
-    ifstream input("C:\\Users\\LENOVO\\OneDrive - The University of Technology\\Desktop\\pbl2\\pbl2\\user.txt");
+    ifstream input("C:\\Users\\LENOVO\\OneDrive - The University of Technology\\Desktop\\pbl2\\pbl2\\user1.txt");
     if (!input.is_open()) {
         cerr << "Không thể mở tệp để đọc.\n";
         return false;
@@ -388,7 +389,7 @@ bool docfilemuontra(MuonTra* m,Trie* cayisbn,Manguser* muser)
         if (kiemtraisbn(isbn, cayisbn) && (muser->binarySearchuser(id)!=-1|| muser->binarySearchadmin(id) != -1)&& kiemtrangay(daymuon, monthmuon, yearmuon) && kiemtrangay(daytra, monthtra, yeartra)) {
             Date* date1=new Date(daymuon, monthmuon, yearmuon);
             Date* date2=new Date(daytra, monthtra, yeartra);
-            if (date1 <= date2)
+            if (date2->operator<=(*date1))
             {
                 char thoat[] = "thoat";
                 initwindow(400, 200, "error");
@@ -414,7 +415,7 @@ bool docfilemuontra(MuonTra* m,Trie* cayisbn,Manguser* muser)
     return true;
 }
 void ghifilebook(Trie* trie) {
-    ofstream output("C:\\Users\\LENOVO\\OneDrive - The University of Technology\\Desktop\\pbl2\\pbl2\\test.txt", ios::out);
+    ofstream output("C:\\Users\\LENOVO\\OneDrive - The University of Technology\\Desktop\\pbl2\\pbl2\\bookout.txt", ios::out);
     if (!output.is_open()) {
         cerr << "Không thể mở tệp để ghi.\n";
         return;
@@ -422,5 +423,61 @@ void ghifilebook(Trie* trie) {
 
     // Gọi hàm ghi để ghi dữ liệu từ trie vào file
     ghi(trie->getroot(), output);
+    output.close();
+}
+void ghifileuser(Manguser* m)
+{
+    ofstream output("C:\\Users\\LENOVO\\OneDrive - The University of Technology\\Desktop\\pbl2\\pbl2\\userout.txt", ios::out);
+    if (!output.is_open()) {
+        cerr << "Không thể mở tệp để ghi.\n";
+        return;
+    }
+
+    for (int i = 0; i < m->manguser.size(); i++)
+    {
+                string line;
+                line += m->manguser[i]->getId() + "/";
+                line += m->manguser[i]->getMatkhau() + "/";
+                line += "0";
+                output << line << endl;
+            
+    }
+    for (int i = 0; i < m->mangadmin.size(); i++)
+    {
+        string line;
+        line += m->mangadmin[i]->getId() + "/";
+        line += m->mangadmin[i]->getMatkhau() + "/";
+        line += "1";
+        output << line << endl;
+
+    }
+    output.close();
+}
+void ghifilemuontra(MuonTra* tt)
+{
+    ofstream output("C:\\Users\\LENOVO\\OneDrive - The University of Technology\\Desktop\\pbl2\\pbl2\\muontraout.txt", ios::out);
+    if (!output.is_open()) {
+        cerr << "Không thể mở tệp để ghi.\n";
+        return;
+    }
+    for (int i = 0; i < tt->dsid.size(); i++)
+    {
+        string id;
+        
+        id += tt->dsid[i]->getid() + "/";
+        
+        for (int y = 0; y < tt->dsid[i]->getcountbook(); y++)
+        {
+            string line;
+            line += id + tt->dsid[i]->getisbn(i) + "/";
+            line += to_string(tt->dsid[i]->getngaymuon(y).getngay()) + "/";
+            line += to_string(tt->dsid[i]->getngaymuon(y).getthang()) + "/";
+            line += to_string(tt->dsid[i]->getngaymuon(y).getnam()) + "/";
+            line += to_string(tt->dsid[i]->getngaytra(y).getngay()) + "/";
+            line += to_string(tt->dsid[i]->getngaytra(y).getthang()) + "/";
+            line += to_string(tt->dsid[i]->getngaytra(y).getnam()) ;
+            output << line << endl;
+        }
+    }
     output.close();
 }

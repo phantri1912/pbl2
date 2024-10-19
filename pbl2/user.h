@@ -32,7 +32,7 @@ private:
     vector<Admin*> mangadmin;  // Quản lý các Admin
 public:
     Manguser() = default;
-
+    friend void ghifileuser(Manguser* m);
     // Thêm User
     void adduser(User* p) {
         manguser.push_back(p);

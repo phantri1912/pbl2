@@ -53,11 +53,11 @@ bool kiemtrangay(int ngay, int thang, int nam) {
     int thanghientai = 1 + ltm.tm_mon;
     int namhientai = 1900 + ltm.tm_year;
     if (thang < 1 || thang > 12) {
-        cout << "Thang khong hop le" << endl;
+        
         return false;
     }
     if (ngay < 1 || ngay > ngaytrongthang[thang - 1]) {
-        cout << "Ngay khong hop le" << endl;
+        
         return false;
     }
     if (nam == namhientai)
@@ -73,7 +73,7 @@ bool kiemtrangay(int ngay, int thang, int nam) {
     }
     if (nam > namhientai)
     {
-        cout << "Nam ko hop le" << endl;
+        
         return false;
     }
 
@@ -94,7 +94,6 @@ bool Date::operator <= (Date d)
     }
     if (nam > d.nam)
     {
-        cout << "Nam ko hop le" << endl;
         return false;
     }
 }

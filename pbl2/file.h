@@ -16,6 +16,6 @@
 	bool docfilemuontra(MuonTra* m, Trie* cayisbn, Manguser* muser);
 	void ghifilebook(Trie* trie);
 	void ghifileuser(Manguser* m);
-	void ghifilebook(MuonTra* tt);
+	void ghifilemuontra(MuonTra* tt);
 
 #endif

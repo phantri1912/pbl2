@@ -1356,6 +1356,8 @@ int main() {
          manhinhchinh(m, tt, cayisbn, caytheloai, caytacgia, caytieude, caynxb, caynam, bookManager);
          
          ghifilebook( cayisbn);
+         ghifileuser(m);
+         ghifilemuontra(tt);
          delete tt;
          delete cayisbn;
          delete caytheloai;
